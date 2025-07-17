@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 
 public class MatrixManager
@@ -22,15 +23,33 @@ public class MatrixManager
         CenterY = MatrixSize / 2;
 
         Debug.Log($"Матрица {MatrixSize}x{MatrixSize} с центром в [{CenterX}, {CenterY}]");
+        MatrixInFile();
     }
 
     public void SetCell(int x, int y, int value)
     {
         Matrix[x, y] = value;
+        MatrixInFile();
     }
 
     public int GetCell(int x, int y)
     {
         return Matrix[x, y];
+    }
+
+    public void MatrixInFile()
+    {
+        string filePath = Path.Combine(Application.dataPath, "matrix3N.txt");
+        using (TextWriter tw = new StreamWriter(filePath))
+        {
+            for (int j = 0; j < MatrixSize; j++)
+            {
+                for (int i = 0; i < MatrixSize; i++)
+                {
+                    tw.Write(Matrix[i, j].ToString().PadLeft(3) + " ");
+                }
+                tw.WriteLine();
+            }
+        }
     }
 }
