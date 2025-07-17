@@ -287,6 +287,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   N: 5
   roomPrefab: {fileID: 3915403372493566557, guid: 08063fa968e346542bfd7670f869732d, type: 3}
+  doorSprites:
+  - {fileID: -1745913386, guid: 7799c15460812da4787af3c18f12348a, type: 3}
+  - {fileID: 1008427950, guid: 7799c15460812da4787af3c18f12348a, type: 3}
+  - {fileID: 1299401727, guid: 7799c15460812da4787af3c18f12348a, type: 3}
+  - {fileID: 1081071420, guid: 7799c15460812da4787af3c18f12348a, type: 3}
 --- !u!4 &722607220
 Transform:
   m_ObjectHideFlags: 0

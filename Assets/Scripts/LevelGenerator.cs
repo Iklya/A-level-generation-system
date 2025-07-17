@@ -4,6 +4,7 @@ public class LevelGenerator : MonoBehaviour
 {
     public int N;
     public GameObject roomPrefab;
+    public Sprite[] doorSprites; // Пусть: 0 - left, 1 - right, 2 - up, 3 - down
 
     private Vector2 roomSize;
     private MatrixManager matrixManager;
@@ -15,9 +16,10 @@ public class LevelGenerator : MonoBehaviour
 
         matrixManager = new MatrixManager(N);
 
-        roomPlacer = new RoomPlacer(matrixManager, roomPrefab, roomSize);
+        roomPlacer = new RoomPlacer(matrixManager, roomPrefab, roomSize, doorSprites);
 
         roomPlacer.PlaceStartRoom();
+
         // тут размещу остальные комнаты по порядку
         // тут задам тип конечной комнате
     }
