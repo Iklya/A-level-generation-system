@@ -8,8 +8,6 @@ public class MatrixManager
     public int CenterX;
     public int CenterY;
 
-    // сделать тут типы комнат 
-
     public MatrixManager(int N)
     {
         MatrixSize = 3 * N;
