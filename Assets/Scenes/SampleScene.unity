@@ -316,13 +316,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897a49cbed342dc438583789c28e6959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  N: 10
-  roomPrefab: {fileID: 8611842621046820805, guid: 9b0204148055db1408f3243df617c5ee, type: 3}
+  N: 100
+  roomPrefabs:
+  - {fileID: 8611842621046820805, guid: 9b0204148055db1408f3243df617c5ee, type: 3}
+  - {fileID: 8483729726416544705, guid: c85663d1e0f226341ad05f88c852276f, type: 3}
+  - {fileID: 5871431741494053840, guid: e23466f2d6965ec4b902fd8bd31a6324, type: 3}
+  - {fileID: 8668375826462960393, guid: 4545a52a7a546eb4fb70478840b2967c, type: 3}
+  - {fileID: 8022677557455137245, guid: e87d930c4355b4b43a2171f800a4b0c8, type: 3}
+  - {fileID: 9128175419700992780, guid: 51a8bba7e688261499c5f7b4f21c9582, type: 3}
   doorSprites:
   - {fileID: -1745913386, guid: 7799c15460812da4787af3c18f12348a, type: 3}
   - {fileID: 1008427950, guid: 7799c15460812da4787af3c18f12348a, type: 3}
   - {fileID: 1299401727, guid: 7799c15460812da4787af3c18f12348a, type: 3}
   - {fileID: 1081071420, guid: 7799c15460812da4787af3c18f12348a, type: 3}
+  roomChances:
+  - roomType: 3
+    chance: 34
+  - roomType: 4
+    chance: 33
+  - roomType: 5
+    chance: 33
 --- !u!4 &722607220
 Transform:
   m_ObjectHideFlags: 0

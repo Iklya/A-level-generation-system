@@ -5,20 +5,22 @@ using System.IO;
 public class RoomPlacer
 {
     private MatrixManager matrixManager;
-    private GameObject roomPrefab;
+    private GameObject[] roomPrefabs;
     private Vector2 roomSize;
-    public Sprite[] doorSprites;
+    private Sprite[] doorSprites;
     private int N;
+    private RoomChance[] roomChances;
 
     private List<(int x, int y, GameObject room)> mainPath = new List<(int x, int y, GameObject room)>();
 
-    public RoomPlacer(MatrixManager matrixManager, GameObject roomPrefab, Vector2 roomSize, Sprite[] doorSprites, int N)
+    public RoomPlacer(MatrixManager matrixManager, GameObject[] roomPrefabs, Vector2 roomSize, Sprite[] doorSprites, int N, RoomChance[] roomChances)
     {
         this.matrixManager = matrixManager;
-        this.roomPrefab = roomPrefab;
+        this.roomPrefabs = roomPrefabs;
         this.roomSize = roomSize;
         this.doorSprites = doorSprites;
         this.N = N;
+        this.roomChances = roomChances;
     }
 
     public void GenerateRooms()
@@ -173,10 +175,31 @@ public class RoomPlacer
         SpriteRenderer spriteRenderer = doorPlacement.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = doorSprites[door];
     }
+
+    private int GetRandomRoomType()
+    {
+        float currChance = Random.Range(0f, 100f);
+        
+        float totalChance = 0f;
+
+        foreach (var roomChance in roomChances)
+        {
+            totalChance += roomChance.chance;
+            if (totalChance > currChance)
+                return roomChance.roomType;
+        }
+
+        return -1;
+    }
+
     private GameObject InstantiateRoom(int x, int y)
     {
         Vector2 gamePosition = MatrixToGame(x, y);
-        return Object.Instantiate(roomPrefab, gamePosition, Quaternion.identity);
+        if (matrixManager.Matrix[x, y] == 1)
+            return Object.Instantiate(roomPrefabs[0], gamePosition, Quaternion.identity);
+        if (matrixManager.Matrix[x, y] == 2)
+            return Object.Instantiate(roomPrefabs[1], gamePosition, Quaternion.identity);
+        return Object.Instantiate(roomPrefabs[GetRandomRoomType() - 1], gamePosition, Quaternion.identity);
     }
 
     private Vector2 MatrixToGame(int x, int y)
@@ -185,5 +208,4 @@ public class RoomPlacer
         float gameY = (y - matrixManager.CenterY) * roomSize.y;
         return new Vector2(gameX, gameY);
     }
-
 }
