@@ -15,7 +15,7 @@ public class MatrixManager
 
     public MatrixManager(int N)
     {
-        MatrixSize = 3 * N;
+        MatrixSize = 2 * N;
         Matrix = new int[MatrixSize, MatrixSize];
 
         for (int x = 0; x < MatrixSize; x++)
@@ -45,7 +45,7 @@ public class MatrixManager
 
     public void MatrixInFile()
     {
-        string filePath = Path.Combine(Application.dataPath, "matrix3N.txt");
+        string filePath = Path.Combine(Application.dataPath, "matrix2N.txt");
         using (TextWriter tw = new StreamWriter(filePath))
         {
             for (int y = MatrixSize - 1; y >= 0; y--)
