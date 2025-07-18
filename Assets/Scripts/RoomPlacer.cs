@@ -30,39 +30,59 @@ public class RoomPlacer
     public void GenerateMatrixMainRooms()
     {
         matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, 1);
-        GameObject startRoom = InstantiateRoom(matrixManager.CurrentX, matrixManager.CurrentY);
-        mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, startRoom));
+        mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null));
 
         for (int i = 1; i < N; i++)
         {
             bool isLastRoom = (i == N - 1);
             int nextDirection = ChooseNextDirection(matrixManager.CurrentX, matrixManager.CurrentY);
 
+            if (nextDirection == 404)
+            {
+                mainPath.Clear();
+
+                for (int x = 0; x < matrixManager.MatrixSize; x++)
+                    for (int y = 0; y < matrixManager.MatrixSize; y++)
+                        matrixManager.Matrix[x, y] = -1;
+
+                matrixManager.CurrentX = matrixManager.CenterX;
+                matrixManager.CurrentY = matrixManager.CenterY;
+
+                GenerateMatrixMainRooms();
+                return;
+            }
+
             MoveToNextCell(nextDirection);
-
             matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, isLastRoom ? 2 : 0);
-
-            GameObject newRoom = InstantiateRoom(matrixManager.CurrentX, matrixManager.CurrentY);
-            mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, newRoom));
+            mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null));
         }
     }
 
     public void GenerateGameMainRooms()
     {
-        for (int i = 0; i < N; i++)
+        for (int r = 0; r < mainPath.Count; r++)
+        {
+            GameObject room = InstantiateRoom(mainPath[r].x, mainPath[r].y);
+
+            room.transform.SetParent(GameObject.Find("MainPathRooms").transform);
+
+            mainPath[r] = (mainPath[r].x, mainPath[r].y, room);
+        }
+
+
+        for (int i = 0; i < mainPath.Count - 1; i++)
         {
             GameObject currRoom = mainPath[i].room;
+            GameObject nextRoom = mainPath[i + 1].room;
 
-            if (i < N - 1)
-            {
-                GameObject nextRoom = mainPath[i + 1].room;
+            int direction = GetDirection((mainPath[i].x, mainPath[i].y), (mainPath[i + 1].x, mainPath[i + 1].y));
 
-                int direction = GetDirection((mainPath[i].x, mainPath[i].y), (mainPath[i + 1].x, mainPath[i + 1].y));
-
-                PlaceDoor(currRoom, direction);
-                PlaceDoor(nextRoom, GetOppositeDirection(direction));
-            }
+            PlaceDoor(currRoom, direction);
+            PlaceDoor(nextRoom, GetOppositeDirection(direction));
+            
         }
+
+        Debug.Log($"—оздалось: {GameObject.Find("MainPathRooms").transform.childCount} комнат");
     }
 
     private int GetDirection((int x, int y) fromRoom, (int x, int y)  toRoom)
@@ -96,7 +116,8 @@ public class RoomPlacer
         if (matrixManager.GetCell(curX, curY + 1) == -1) avaliableDoors.Add(2);
         if (matrixManager.GetCell(curX, curY - 1) == -1) avaliableDoors.Add(3);
 
-        // в будущем проверка на недоступность размещени€ дверей (генераци€ пойдЄт заново)
+        if (avaliableDoors.Count == 0)
+            return 404;
 
         return avaliableDoors[Random.Range(0, avaliableDoors.Count)];
     }
@@ -158,7 +179,7 @@ public class RoomPlacer
         return Object.Instantiate(roomPrefab, gamePosition, Quaternion.identity);
     }
 
-    private Vector3 MatrixToGame(int x, int y)
+    private Vector2 MatrixToGame(int x, int y)
     {
         float gameX = (x - matrixManager.CenterX) * roomSize.x;
         float gameY = (y - matrixManager.CenterY) * roomSize.y;
