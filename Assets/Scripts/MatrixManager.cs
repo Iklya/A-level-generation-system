@@ -7,6 +7,9 @@ public class MatrixManager
     public int MatrixSize;
     public int CenterX;
     public int CenterY;
+    public int CurrentX;
+    public int CurrentY;
+
 
     public MatrixManager(int N)
     {
@@ -19,6 +22,9 @@ public class MatrixManager
 
         CenterX = MatrixSize / 2;
         CenterY = MatrixSize / 2;
+
+        CurrentX = CenterX;
+        CurrentY = CenterY;
 
         Debug.Log($"Матрица {MatrixSize}x{MatrixSize} с центром в [{CenterX}, {CenterY}]");
         MatrixInFile();

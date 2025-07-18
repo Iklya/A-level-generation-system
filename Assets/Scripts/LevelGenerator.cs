@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
+    [Range(2, 100)]
     public int N;
     public GameObject roomPrefab; // потом заменю на GameObject[] типов комнат
     public Sprite[] doorSprites; // Пусть: 0 - left, 1 - right, 2 - up, 3 - down

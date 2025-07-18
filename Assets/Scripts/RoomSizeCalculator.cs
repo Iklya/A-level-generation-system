@@ -24,8 +24,8 @@ public class RoomSizeCalculator
         Transform wallRightPrefab = wallsRight.transform.Find("wallRightPrefab");
 
 
-        float width = Mathf.Abs(wallLeftPrefab.position.x - wallRightPrefab.position.x);
-        float height = Mathf.Abs(wallUpPrefab.position.y - wallDownPrefab.position.y);
+        float width = Mathf.Abs(wallLeftPrefab.position.x - wallRightPrefab.position.x) + 0.470f;
+        float height = Mathf.Abs(wallUpPrefab.position.y - wallDownPrefab.position.y) + 0.470f;
 
         Debug.Log($"Размер комнаты: {width}x{height}");
 

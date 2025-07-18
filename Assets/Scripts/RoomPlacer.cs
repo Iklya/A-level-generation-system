@@ -54,29 +54,43 @@ public class RoomPlacer
 
         int randDoor = avaliableDoors[Random.Range(0, avaliableDoors.Count)];
 
-        switch(randDoor)
+        Transform doorPlacement = null;
+        switch (randDoor)
         {
             case 0:
                 Transform wallsLeft = room.transform.Find("WallsLeft");
-                Transform leftDoorPlacement = wallsLeft.transform.Find("doorPlacement");
-                ReplaceDoorSprite(leftDoorPlacement, avaliableDoors[randDoor]);
+                doorPlacement = wallsLeft.transform.Find("doorPlacement");
+
+                matrixManager.CurrentX -= -1;
+
                 break;
             case 1:
                 Transform wallsRight = room.transform.Find("WallsRight");
-                Transform rightDoorPlacement = wallsRight.transform.Find("doorPlacement");
-                ReplaceDoorSprite(rightDoorPlacement, avaliableDoors[randDoor]);
+                doorPlacement = wallsRight.transform.Find("doorPlacement");
+
+                matrixManager.CurrentX += 1;
+
                 break;
             case 2:
                 Transform wallsUp = room.transform.Find("WallsUp");
-                Transform upDoorPlacement = wallsUp.transform.Find("doorPlacement");
-                ReplaceDoorSprite(upDoorPlacement, avaliableDoors[randDoor]);
+                doorPlacement = wallsUp.transform.Find("doorPlacement");
+
+                matrixManager.CurrentY += 1;
+
                 break;
             case 3:
                 Transform wallsDown = room.transform.Find("WallsDown");
-                Transform downDoorPlacement = wallsDown.transform.Find("doorPlacement");
-                ReplaceDoorSprite(downDoorPlacement, avaliableDoors[randDoor]);
+                doorPlacement = wallsDown.transform.Find("doorPlacement");
+
+                matrixManager.CurrentY -= 1;
+
                 break;
         }
+
+        ReplaceDoorSprite(doorPlacement, avaliableDoors[randDoor]);
+
+        matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, 0);
+        InstantiateRoom(matrixManager.CurrentX, matrixManager.CurrentY);
     }
 
     private void ReplaceDoorSprite(Transform doorPlacement, int door)
