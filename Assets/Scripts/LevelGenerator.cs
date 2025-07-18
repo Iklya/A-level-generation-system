@@ -19,12 +19,10 @@ public class LevelGenerator : MonoBehaviour
         roomSize = roomSizeCalculator.RoomSizeCalculation(roomPrefab);
 
         matrixManager = new MatrixManager(N);
+        roomPlacer = new RoomPlacer(matrixManager, roomPrefab, roomSize, doorSprites, N);
 
-        roomPlacer = new RoomPlacer(matrixManager, roomPrefab, roomSize, doorSprites);
+        roomPlacer.GenerateRooms();
 
-        roomPlacer.PlaceStartRoom();
-
-        // тут размещу остальные комнаты по порядку
         // тут задам тип конечной комнате
     }
 }

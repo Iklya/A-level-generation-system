@@ -5,8 +5,10 @@ public class MatrixManager
 {
     public int[,] Matrix;
     public int MatrixSize;
+
     public int CenterX;
     public int CenterY;
+
     public int CurrentX;
     public int CurrentY;
 
@@ -46,11 +48,11 @@ public class MatrixManager
         string filePath = Path.Combine(Application.dataPath, "matrix3N.txt");
         using (TextWriter tw = new StreamWriter(filePath))
         {
-            for (int j = 0; j < MatrixSize; j++)
+            for (int y = MatrixSize - 1; y >= 0; y--)
             {
-                for (int i = 0; i < MatrixSize; i++)
+                for (int x = 0; x < MatrixSize; x++)
                 {
-                    tw.Write(Matrix[i, j].ToString().PadLeft(3) + " ");
+                    tw.Write(Matrix[x, y].ToString().PadLeft(3) + " ");
                 }
                 tw.WriteLine();
             }

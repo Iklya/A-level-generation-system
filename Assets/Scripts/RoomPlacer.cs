@@ -1,33 +1,157 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public class RoomPlacer
 {
     private MatrixManager matrixManager;
     private GameObject roomPrefab;
     private Vector2 roomSize;
-
     public Sprite[] doorSprites;
+    private int N;
 
-    public RoomPlacer(MatrixManager matrixManager, GameObject roomPrefab, Vector2 roomSize, Sprite[] doorSprites)
+    private List<(int x, int y, GameObject room)> mainPath = new List<(int x, int y, GameObject room)>();
+
+    public RoomPlacer(MatrixManager matrixManager, GameObject roomPrefab, Vector2 roomSize, Sprite[] doorSprites, int N)
     {
         this.matrixManager = matrixManager;
         this.roomPrefab = roomPrefab;
         this.roomSize = roomSize;
         this.doorSprites = doorSprites;
+        this.N = N;
     }
 
-    public void PlaceStartRoom()
+    public void GenerateRooms()
     {
-        int x = matrixManager.CenterX;
-        int y = matrixManager.CenterY;
-
-        matrixManager.SetCell(x, y, 1);
-        GameObject startRoom = InstantiateRoom(x, y);
-
-        PlaceRandomDoor(startRoom, x, y);
+        GenerateMatrixMainRooms();
+        GenerateGameMainRooms();
     }
 
+    public void GenerateMatrixMainRooms()
+    {
+        matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, 1);
+        GameObject startRoom = InstantiateRoom(matrixManager.CurrentX, matrixManager.CurrentY);
+        mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, startRoom));
+
+        for (int i = 1; i < N; i++)
+        {
+            bool isLastRoom = (i == N - 1);
+            int nextDirection = ChooseNextDirection(matrixManager.CurrentX, matrixManager.CurrentY);
+
+            MoveToNextCell(nextDirection);
+
+            matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, isLastRoom ? 2 : 0);
+
+            GameObject newRoom = InstantiateRoom(matrixManager.CurrentX, matrixManager.CurrentY);
+            mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, newRoom));
+        }
+    }
+
+    public void GenerateGameMainRooms()
+    {
+        for (int i = 0; i < N; i++)
+        {
+            GameObject currRoom = mainPath[i].room;
+
+            if (i < N - 1)
+            {
+                GameObject nextRoom = mainPath[i + 1].room;
+
+                int direction = GetDirection((mainPath[i].x, mainPath[i].y), (mainPath[i + 1].x, mainPath[i + 1].y));
+
+                PlaceDoor(currRoom, direction);
+                PlaceDoor(nextRoom, GetOppositeDirection(direction));
+            }
+        }
+    }
+
+    private int GetDirection((int x, int y) fromRoom, (int x, int y)  toRoom)
+    {
+        if (toRoom.x < fromRoom.x)
+            return 0;
+        if (toRoom.x > fromRoom.x)
+            return 1;
+        if (toRoom.y > fromRoom.y)
+            return 2;
+        return 3;
+    }
+
+    private int GetOppositeDirection(int dir)
+    {
+        if (dir == 0)
+            return 1;
+        if (dir == 1)
+            return 0;
+        if (dir == 2)
+            return 3;
+        return 2;
+    }
+
+    private int ChooseNextDirection(int curX, int curY)
+    {
+        List<int> avaliableDoors = new List<int>();
+
+        if (matrixManager.GetCell(curX - 1, curY) == -1) avaliableDoors.Add(0);
+        if (matrixManager.GetCell(curX + 1, curY) == -1) avaliableDoors.Add(1);
+        if (matrixManager.GetCell(curX, curY + 1) == -1) avaliableDoors.Add(2);
+        if (matrixManager.GetCell(curX, curY - 1) == -1) avaliableDoors.Add(3);
+
+        // в будущем проверка на недоступность размещения дверей (генерация пойдёт заново)
+
+        return avaliableDoors[Random.Range(0, avaliableDoors.Count)];
+    }
+
+    private void PlaceDoor(GameObject room, int dir)
+    {
+        Transform doorPlacement = null;
+
+        switch (dir)
+        {
+            case 0:
+                Transform wallsLeft = room.transform.Find("WallsLeft");
+                doorPlacement = wallsLeft.transform.Find("doorPlacement");
+                break;
+            case 1:
+                Transform wallsRight = room.transform.Find("WallsRight");
+                doorPlacement = wallsRight.transform.Find("doorPlacement");
+                break;
+            case 2:
+                Transform wallsUp = room.transform.Find("WallsUp");
+                doorPlacement = wallsUp.transform.Find("doorPlacement");
+                break;
+            case 3:
+                Transform wallsDown = room.transform.Find("WallsDown");
+                doorPlacement = wallsDown.transform.Find("doorPlacement");
+                break;
+        }
+
+        ReplaceDoorSprite(doorPlacement, dir);
+    }
+
+    private void MoveToNextCell(int dir)
+    {
+        switch (dir)
+        {
+            case 0:
+                matrixManager.CurrentX -= 1;
+                break;
+            case 1:
+                matrixManager.CurrentX += 1;
+                break;
+            case 2:
+                matrixManager.CurrentY += 1;
+                break;
+            case 3:
+                matrixManager.CurrentY -= 1;
+                break;
+        }
+    }
+
+    private void ReplaceDoorSprite(Transform doorPlacement, int door)
+    {
+        SpriteRenderer spriteRenderer = doorPlacement.GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = doorSprites[door];
+    }
     private GameObject InstantiateRoom(int x, int y)
     {
         Vector2 gamePosition = MatrixToGame(x, y);
@@ -41,61 +165,4 @@ public class RoomPlacer
         return new Vector2(gameX, gameY);
     }
 
-    private void PlaceRandomDoor(GameObject room, int x, int y)
-    {
-        List<int> avaliableDoors = new List<int>();
-
-        if (matrixManager.GetCell(x - 1, y) == -1) avaliableDoors.Add(0);
-        if (matrixManager.GetCell(x + 1, y) == -1) avaliableDoors.Add(1);
-        if (matrixManager.GetCell(x, y + 1) == -1) avaliableDoors.Add(2);
-        if (matrixManager.GetCell(x, y - 1) == -1) avaliableDoors.Add(3);
-
-        // в будущем проверка на недоступность размещения дверей (генерация пойдёт заново)
-
-        int randDoor = avaliableDoors[Random.Range(0, avaliableDoors.Count)];
-
-        Transform doorPlacement = null;
-        switch (randDoor)
-        {
-            case 0:
-                Transform wallsLeft = room.transform.Find("WallsLeft");
-                doorPlacement = wallsLeft.transform.Find("doorPlacement");
-
-                matrixManager.CurrentX -= -1;
-
-                break;
-            case 1:
-                Transform wallsRight = room.transform.Find("WallsRight");
-                doorPlacement = wallsRight.transform.Find("doorPlacement");
-
-                matrixManager.CurrentX += 1;
-
-                break;
-            case 2:
-                Transform wallsUp = room.transform.Find("WallsUp");
-                doorPlacement = wallsUp.transform.Find("doorPlacement");
-
-                matrixManager.CurrentY += 1;
-
-                break;
-            case 3:
-                Transform wallsDown = room.transform.Find("WallsDown");
-                doorPlacement = wallsDown.transform.Find("doorPlacement");
-
-                matrixManager.CurrentY -= 1;
-
-                break;
-        }
-
-        ReplaceDoorSprite(doorPlacement, avaliableDoors[randDoor]);
-
-        matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, 0);
-        InstantiateRoom(matrixManager.CurrentX, matrixManager.CurrentY);
-    }
-
-    private void ReplaceDoorSprite(Transform doorPlacement, int door)
-    {
-        SpriteRenderer spriteRenderer = doorPlacement.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = doorSprites[door];
-    }
 }
