@@ -12,7 +12,6 @@ public class MatrixManager
     public int CurrentX;
     public int CurrentY;
 
-
     public MatrixManager(int N)
     {
         MatrixSize = 2 * N;
@@ -29,13 +28,13 @@ public class MatrixManager
         CurrentY = CenterY;
 
         Debug.Log($"Матрица {MatrixSize}x{MatrixSize} с центром в [{CenterX}, {CenterY}]");
-        MatrixInFile();
+        MatrixToFile();
     }
 
     public void SetCell(int x, int y, int value)
     {
         Matrix[x, y] = value;
-        MatrixInFile();
+        MatrixToFile();
     }
 
     public int GetCell(int x, int y)
@@ -43,7 +42,7 @@ public class MatrixManager
         return Matrix[x, y];
     }
 
-    public void MatrixInFile()
+    public void MatrixToFile()
     {
         string filePath = Path.Combine(Application.dataPath, "matrix2N.txt");
         using (TextWriter tw = new StreamWriter(filePath))
@@ -57,5 +56,12 @@ public class MatrixManager
                 tw.WriteLine();
             }
         }
+    }
+
+    public Vector2 MatrixToGame(int x, int y, Vector2 roomSize)
+    {
+        float gameX = (x - CenterX) * roomSize.x;
+        float gameY = (y - CenterY) * roomSize.y;
+        return new Vector2(gameX, gameY);
     }
 }
