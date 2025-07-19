@@ -14,6 +14,7 @@ public class LevelGenerator : MonoBehaviour
     private RoomSizeCalculator roomSizeCalculator;
 
     public RoomChance[] roomChances;
+    public CoridorDoorChance[] coridorDoorChances;
 
     void Start()
     {
@@ -24,26 +25,41 @@ public class LevelGenerator : MonoBehaviour
         roomPlacer = new RoomPlacer(matrixManager, roomPrefabs, roomSize, doorSprites, N, roomChances);
 
         roomPlacer.GenerateRooms();
-
-        // тут задам тип конечной комнате
     }
 
     private void OnValidate()
     {
-        float totalChance = 0f;
+        float roomTypeTotalChance = 0f;
+        float coridorDoorTotalChance = 0f;
+
         foreach (var roomChance in roomChances)
         {
-            totalChance += roomChance.chance;
+            roomTypeTotalChance += roomChance.chance;
         }
 
-        if (totalChance > 100f)
+        if (roomTypeTotalChance > 100f)
         {
-            Debug.LogError("¬еро€тность генерации типов комнат превышает 100%.");
+            Debug.LogError($"¬еро€тность генерации {roomTypeTotalChance} превышает 100%.");
         }
         
-        if (totalChance < 100f)
+        if (roomTypeTotalChance < 100f)
         {
-            Debug.LogError("¬еро€тность генерации типов комнат меньше 100%");
+            Debug.LogError($"¬еро€тность генерации {roomTypeTotalChance} меньше 100%");
+        }
+
+        foreach (var coridorDoorChance in coridorDoorChances)
+        {
+            coridorDoorTotalChance += coridorDoorChance.chance;
+        }
+
+        if (coridorDoorTotalChance > 100f)
+        {
+            Debug.LogError($"¬еро€тность генерации {coridorDoorTotalChance} превышает 100%.");
+        }
+
+        if (coridorDoorTotalChance < 100f)
+        {
+            Debug.LogError($"¬еро€тность генерации {coridorDoorTotalChance} меньше 100%");
         }
     }
 }
