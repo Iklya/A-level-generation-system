@@ -19,29 +19,23 @@ public class RoomInstantiator
     public void InstantiateMainRooms(List<(int x, int y, GameObject room, int roomType)> mainPath, int r)
     {
         GameObject roomObj = null;
-        int curType = 0;
+        int curType = matrixManager.GetCell(mainPath[r].x, mainPath[r].y);
+        Debug.Log($"{curType} - изначально для {r + 1} комнаты был такой индекс матрицы");
+
 
         Vector2 gamePosition = matrixManager.MatrixToGame(mainPath[r].x, mainPath[r].y, roomSize);
 
-
-        switch (matrixManager.GetCell(mainPath[r].x, mainPath[r].y))
+        if (curType <= 0)
         {
-            case 1:
-                curType = 1;
-                roomObj = Object.Instantiate(roomPrefabs[curType - 1], gamePosition, Quaternion.identity);
-                break;
-            case 2:
-                curType = 2;
-                roomObj = Object.Instantiate(roomPrefabs[curType - 1], gamePosition, Quaternion.identity);
-                break;
-            default:
-                curType = roomTypeSelector.GetRandomRoomType();
-                roomObj = Object.Instantiate(roomPrefabs[curType - 1], gamePosition, Quaternion.identity);
-                break;
+            curType = roomTypeSelector.GetRandomRoomType();
+            matrixManager.SetCell(mainPath[r].x, mainPath[r].y, curType);
         }
 
+        roomObj = Object.Instantiate(roomPrefabs[curType - 1], gamePosition, Quaternion.identity);
+
+
+        Debug.Log($"{curType} - выбранный тип комнаты для {r+1} комнаты основного пути");
         mainPath[r] = (mainPath[r].x, mainPath[r].y, roomObj, curType);
-        matrixManager.SetCell(mainPath[r].x, mainPath[r].y, curType);
     }
 
     public void InstantiateExtraRooms(List<(int x, int y, GameObject room, int roomType)> extraPath, int r)

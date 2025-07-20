@@ -30,7 +30,7 @@ public class MatrixMainRoomsGenerator
             {
                 mainPath.Clear();
 
-                matrixManager = new MatrixManager(N);
+                matrixManager.Reset();
 
                 GenerateMatrixMainRooms();
                 return;

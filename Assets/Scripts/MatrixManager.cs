@@ -84,5 +84,16 @@ public class MatrixManager
         }
     }
 
+    public void Reset()
+    {
+        for (int x = 0; x < MatrixSize; x++)
+            for (int y = 0; y < MatrixSize; y++)
+                Matrix[x, y] = -1;
 
+        CenterX = MatrixSize / 2;
+        CenterY = MatrixSize / 2;
+
+        CurrentX = CenterX;
+        CurrentY = CenterY;
+    }
 }

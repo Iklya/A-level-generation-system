@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class RoomTypeSelector
@@ -17,10 +18,10 @@ public class RoomTypeSelector
         foreach (var roomChance in roomChances)
         {
             totalChance += roomChance.chance;
-            if (totalChance > currChance)
+            if (totalChance >= currChance)
                 return roomChance.roomType;
         }
 
-        return -1;
+        return roomChances.Last().roomType;
     }
 }

@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897a49cbed342dc438583789c28e6959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  N: 15
+  N: 50
   roomPrefabs:
   - {fileID: 8611842621046820805, guid: 9b0204148055db1408f3243df617c5ee, type: 3}
   - {fileID: 8483729726416544705, guid: c85663d1e0f226341ad05f88c852276f, type: 3}
@@ -338,11 +338,11 @@ MonoBehaviour:
     chance: 33
   coridorDoorChances:
   - doorAmount: 2
-    chance: 34
+    chance: 0
   - doorAmount: 3
-    chance: 33
+    chance: 0
   - doorAmount: 4
-    chance: 33
+    chance: 100
 --- !u!4 &722607220
 Transform:
   m_ObjectHideFlags: 0
