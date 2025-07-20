@@ -13,6 +13,9 @@ public class LevelGenerator : MonoBehaviour
     private MatrixManager matrixManager;
     private RoomPlacer roomPlacer;
     private RoomSizeCalculator roomSizeCalculator;
+    RoomTypeSelector roomTypeSelector;
+    DoorAmountSelector doorAmountSelector;
+
 
     public RoomChance[] roomChances;
     public CoridorDoorChance[] coridorDoorChances;
@@ -23,7 +26,13 @@ public class LevelGenerator : MonoBehaviour
         roomSize = roomSizeCalculator.RoomSizeCalculation(roomPrefabs[1]);
 
         matrixManager = new MatrixManager(N);
-        roomPlacer = new RoomPlacer(matrixManager, roomPrefabs, roomSize, doorSprites, N, roomChances, coridorDoorChances);
+
+        roomTypeSelector = new RoomTypeSelector(roomChances);
+        RoomInstantiator roomInstantiator = new RoomInstantiator(matrixManager, roomPrefabs, roomSize, roomTypeSelector);
+        DoorAmountSelector doorAmountSelector = new DoorAmountSelector(coridorDoorChances);
+
+        roomPlacer = new RoomPlacer(matrixManager, roomPrefabs, roomSize, doorSprites, N, roomChances,
+                                    coridorDoorChances, roomTypeSelector, roomInstantiator, doorAmountSelector);
 
         roomPlacer.GenerateRooms();
     }

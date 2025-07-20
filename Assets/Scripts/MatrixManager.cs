@@ -64,4 +64,25 @@ public class MatrixManager
         float gameY = (y - CenterY) * roomSize.y;
         return new Vector2(gameX, gameY);
     }
+
+    public void MoveToNextCell(int dir)
+    {
+        switch (dir)
+        {
+            case 0:
+                CurrentX -= 1;
+                break;
+            case 1:
+                CurrentX += 1;
+                break;
+            case 2:
+                CurrentY += 1;
+                break;
+            case 3:
+                CurrentY -= 1;
+                break;
+        }
+    }
+
+
 }
