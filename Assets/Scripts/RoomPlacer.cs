@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using example;
 
 
 public class RoomPlacer
@@ -20,7 +21,7 @@ public class RoomPlacer
 
     private List<(int x, int y, GameObject room, int roomType)> mainPath = new List<(int x, int y, GameObject room, int roomType)>();
 
-    // ключ - индекс коридора + направление доп. пути, значение - список комнат доп пути
+    // пїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ + пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
     private Dictionary<(int, int), List<(int x, int y, GameObject room, int roomType)>> extraPaths = new Dictionary<(int, int), List<(int x, int y, GameObject room, int roomType)>>();
 
     public RoomPlacer(MatrixManager matrixManager, GameObject[] roomPrefabs, Vector2 roomSize,
@@ -46,6 +47,7 @@ public class RoomPlacer
         GenerateMatrixMainRooms();
         GenerateGameMainRooms();
     }
+    public RoomContainer StartRoom;
 
     private void GenerateMatrixMainRooms()
     {
@@ -75,7 +77,7 @@ public class RoomPlacer
             mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null, curRoomType));
         }
     }
-
+    
     private void GenerateGameMainRooms()
     {
         for (int r = 0; r < N; r++)
@@ -86,7 +88,7 @@ public class RoomPlacer
 
             if (r > 0)
             {
-                // Сразу ставим дверь между текущей и предыдущей комнатой
+                // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 int direction = directionManager.GetDirection(
                     (mainPath[r - 1].x, mainPath[r - 1].y),
                     (mainPath[r].x, mainPath[r].y)
@@ -101,11 +103,11 @@ public class RoomPlacer
                 int curDoorAmount = doorAmountSelector.GetCoridorDoorsAmount();
                 if (curDoorAmount > 2)
                 {
-                    // проверяем сколько можно доп. путей построить от текущего коридора
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
                     List<int> availableDirections = directionManager.SelectNextDirections(matrixManager);
                     curDoorAmount = Mathf.Min(curDoorAmount - 2, availableDirections.Count);
-                    Debug.Log($"{curDoorAmount} - доступно дверей для размещения в текущем коридоре");
+                    Debug.Log($"{curDoorAmount} - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 
                     if (curDoorAmount > 0)
                     {
@@ -118,7 +120,7 @@ public class RoomPlacer
             }
         }
 
-        Debug.Log($"Создалось: {GameObject.Find("MainPathRooms").transform.childCount} комнат основного пути");
+        Debug.Log($"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: {GameObject.Find("MainPathRooms").transform.childCount} пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ");
     }
 
     private void GenerateMatrixExtraRooms(Dictionary<(int, int), List<(int x, int y, GameObject room, int roomType)>> extraPaths, int coridorIdx, int S, int curDoorAmount)
@@ -130,7 +132,7 @@ public class RoomPlacer
 
             int k = Random.Range(1, S + 1);
 
-            Debug.Log($"{coridorIdx} - индекс коридора осн пути с 3+ дверьми, длина доп. пути - {k}");
+            Debug.Log($"{coridorIdx} - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ 3+ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ - {k}");
 
             List<(int x, int y, GameObject room, int roomType)> curPath = new List<(int x, int y, GameObject room, int roomType)>();
 
@@ -179,7 +181,7 @@ public class RoomPlacer
 
             List<(int x, int y, GameObject room, int roomType)> extraPath = kv.Value;
 
-            // задаём имя контейнеру (можно в отдельную функцию потом тоже, но есть ли смысл)
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ)
             string parentName = $"ExtraPath_{prevDirection}";
             GameObject containerObj = new GameObject(parentName);
             containerObj.transform.SetParent(prevRoom.transform);

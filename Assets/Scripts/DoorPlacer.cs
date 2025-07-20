@@ -1,3 +1,4 @@
+using example;
 using UnityEngine;
 
 public class DoorPlacer
@@ -9,10 +10,9 @@ public class DoorPlacer
         this.doorSprites = doorSprites;
     }
 
-    public void PlaceDoor(GameObject room, int dir)
+    public void PlaceDoor(GameObject room,  int dir)
     {
         Transform doorPlacement = null;
-
         switch (dir)
         {
             case 0:
@@ -28,6 +28,12 @@ public class DoorPlacer
                 doorPlacement = room.transform.Find("WallsDown/doorPlacement");
                 break;
         }
+
+        if (doorPlacement == null)
+        {
+            Debug.LogError(room.name + " this direction is undefined " + (ConnectionDirection)dir);
+        }
+        
 
         SpriteRenderer spriteRenderer = doorPlacement.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = doorSprites[dir];
