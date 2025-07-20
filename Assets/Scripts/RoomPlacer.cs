@@ -80,7 +80,9 @@ public class RoomPlacer
     {
         for (int r = 0; r < N; r++)
         {
-            roomInstantiator.InstantiateMainRooms(mainPath, r);
+            (GameObject room, int curType) = roomInstantiator.InstantiateMainRooms(mainPath, r);
+
+            mainPath[r] = (mainPath[r].x, mainPath[r].y, room, curType);
 
             mainPath[r].room.transform.SetParent(GameObject.Find("MainPathRooms").transform);
 
@@ -144,7 +146,10 @@ public class RoomPlacer
                 if (nextDirections.Count == 0)
                 {
                     matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, 6);
-                    curPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null, 6));
+                    if (curPath.Count > 0)
+                        curPath[curPath.Count - 1] = (matrixManager.CurrentX, matrixManager.CurrentY, null, 6);
+                    else
+                        curPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null, 6));
                     break;
                 }
 

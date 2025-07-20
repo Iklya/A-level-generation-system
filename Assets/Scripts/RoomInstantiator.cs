@@ -16,12 +16,11 @@ public class RoomInstantiator
         this.roomTypeSelector = roomTypeSelector;
     }
 
-    public void InstantiateMainRooms(List<(int x, int y, GameObject room, int roomType)> mainPath, int r)
+    public (GameObject, int) InstantiateMainRooms(List<(int x, int y, GameObject room, int roomType)> mainPath, int r)
     {
         GameObject roomObj = null;
         int curType = matrixManager.GetCell(mainPath[r].x, mainPath[r].y);
         Debug.Log($"{curType} - изначально для {r + 1} комнаты был такой индекс матрицы");
-
 
         Vector2 gamePosition = matrixManager.MatrixToGame(mainPath[r].x, mainPath[r].y, roomSize);
 
@@ -33,9 +32,10 @@ public class RoomInstantiator
 
         roomObj = Object.Instantiate(roomPrefabs[curType - 1], gamePosition, Quaternion.identity);
 
-
         Debug.Log($"{curType} - выбранный тип комнаты для {r+1} комнаты основного пути");
         mainPath[r] = (mainPath[r].x, mainPath[r].y, roomObj, curType);
+
+        return (roomObj, curType);
     }
 
     public void InstantiateExtraRooms(List<(int x, int y, GameObject room, int roomType)> extraPath, int r)
