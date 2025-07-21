@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using example;
+using example.Scripts.RoomScripts;
 
 
 public class RoomPlacer

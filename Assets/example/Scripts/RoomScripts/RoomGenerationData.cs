@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace example
+namespace example.Scripts.RoomScripts
 {
     public class RoomGenerationData
     {

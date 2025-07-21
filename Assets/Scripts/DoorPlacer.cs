@@ -1,4 +1,5 @@
 using example;
+using example.Scripts.RoomScripts;
 using UnityEngine;
 
 public class DoorPlacer

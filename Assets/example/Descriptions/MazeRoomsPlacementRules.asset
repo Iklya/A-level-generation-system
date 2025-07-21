@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cf812babc46aa04b82e83e35227e1f0, type: 3}
+  m_Name: MazeRoomsPlacementRules
+  m_EditorClassIdentifier: 
+  MazeDifficultyRules:
+  - Difficulty: 0
+    MainPathMinMaxSteps: {x: 5, y: 6}
+    RoomsPlacementRules:
+    - RoomType: 3
+      RoomPrefab: {fileID: 4162127982355693207, guid: 7f84ff00316a2b64f8d58405a459dbed, type: 3}
+      MaximumCount: 2
+    - RoomType: 4
+      RoomPrefab: {fileID: 9145090246650932741, guid: 6fc3d99836828814790ae822687c4b3d, type: 3}
+      MaximumCount: 1
+    - RoomType: 6
+      RoomPrefab: {fileID: 4769916011184515006, guid: ff9cb90e9f36e6541860e195ba8092bd, type: 3}
+      MaximumCount: 1
+    - RoomType: 5
+      RoomPrefab: {fileID: 3065552907631740191, guid: c1710d8787fa2914ab2c40f71b9e4d1e, type: 3}
+      MaximumCount: 1
+    - RoomType: 2
+      RoomPrefab: {fileID: 1414145903118384108, guid: 0c64836ae6277e5468158152c0de2da2, type: 3}
+      MaximumCount: -1
+    - RoomType: 1
+      RoomPrefab: {fileID: 4553927143899573667, guid: b3c8fc9beb66f7d4d890d01f1644c8bd, type: 3}
+      MaximumCount: 1
+  - Difficulty: 1
+    MainPathMinMaxSteps: {x: 10, y: 12}
+    RoomsPlacementRules:
+    - RoomType: 3
+      RoomPrefab: {fileID: 7725814032346466775, guid: 8fe96881acdd79940ad33a00612d6980, type: 3}
+      MaximumCount: 4
+    - RoomType: 4
+      RoomPrefab: {fileID: 9145090246650932741, guid: 6fc3d99836828814790ae822687c4b3d, type: 3}
+      MaximumCount: 2
+    - RoomType: 6
+      RoomPrefab: {fileID: 4769916011184515006, guid: ff9cb90e9f36e6541860e195ba8092bd, type: 3}
+      MaximumCount: 1
+    - RoomType: 5
+      RoomPrefab: {fileID: 3065552907631740191, guid: c1710d8787fa2914ab2c40f71b9e4d1e, type: 3}
+      MaximumCount: 3
+    - RoomType: 2
+      RoomPrefab: {fileID: 1414145903118384108, guid: 0c64836ae6277e5468158152c0de2da2, type: 3}
+      MaximumCount: -1
+    - RoomType: 1
+      RoomPrefab: {fileID: 4553927143899573667, guid: b3c8fc9beb66f7d4d890d01f1644c8bd, type: 3}
+      MaximumCount: 1
+  - Difficulty: 2
+    MainPathMinMaxSteps: {x: 15, y: 25}
+    RoomsPlacementRules:
+    - RoomType: 3
+      RoomPrefab: {fileID: 4162127982355693207, guid: 7f84ff00316a2b64f8d58405a459dbed, type: 3}
+      MaximumCount: 8
+    - RoomType: 4
+      RoomPrefab: {fileID: 9145090246650932741, guid: 6fc3d99836828814790ae822687c4b3d, type: 3}
+      MaximumCount: 8
+    - RoomType: 6
+      RoomPrefab: {fileID: 4769916011184515006, guid: ff9cb90e9f36e6541860e195ba8092bd, type: 3}
+      MaximumCount: 1
+    - RoomType: 5
+      RoomPrefab: {fileID: 3065552907631740191, guid: c1710d8787fa2914ab2c40f71b9e4d1e, type: 3}
+      MaximumCount: 3
+    - RoomType: 2
+      RoomPrefab: {fileID: 1414145903118384108, guid: 0c64836ae6277e5468158152c0de2da2, type: 3}
+      MaximumCount: -1
+    - RoomType: 1
+      RoomPrefab: {fileID: 4553927143899573667, guid: b3c8fc9beb66f7d4d890d01f1644c8bd, type: 3}
+      MaximumCount: 1
