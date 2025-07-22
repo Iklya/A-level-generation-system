@@ -20,6 +20,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: FightAlternateRoomPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4162127982355693207, guid: 7f84ff00316a2b64f8d58405a459dbed, type: 3}
+      propertyPath: RoomAdditionalItemsPlaces.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4162127982355693207, guid: 7f84ff00316a2b64f8d58405a459dbed, type: 3}
+      propertyPath: 'RoomAdditionalItemsPlaces.Array.data[3]'
+      value: 
+      objectReference: {fileID: 4118351658429831353}
     - target: {fileID: 4354590637327351764, guid: 7f84ff00316a2b64f8d58405a459dbed, type: 3}
       propertyPath: m_Size.x
       value: 7.2798734
@@ -101,3 +109,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f84ff00316a2b64f8d58405a459dbed, type: 3}
+--- !u!4 &4118351658429831353 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7769290687754973177, guid: 7f84ff00316a2b64f8d58405a459dbed, type: 3}
+  m_PrefabInstance: {fileID: 5977758525017519936}
+  m_PrefabAsset: {fileID: 0}

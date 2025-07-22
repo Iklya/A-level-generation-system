@@ -20,7 +20,7 @@ namespace example.Scripts.MazeGeneratorScripts
         private static int[] _connectionIndexesMap = new[] { 0, 1, 2, 3, 1, 0, 3, 2 };
         
         private static List<ConnectionDirection> _randomDirectionIndexesList = Enum.GetValues(typeof(ConnectionDirection)).Cast<ConnectionDirection>().ToList();
-        private static readonly int[] _oppositeDerectionsIndexes = new[] { 1, 0, 3, 2 };
+        private static readonly int[] _oppositeDirectionsIndexes = new[] { 1, 0, 3, 2 };
 
         public static void SetCurrentDifficulty(MazePlacementDifficultyRule mazeRoomsPlacementRule)
         {
@@ -63,13 +63,13 @@ namespace example.Scripts.MazeGeneratorScripts
         
         private static int GetOppositeDirection(ConnectionDirection direction)
         {
-            return _oppositeDerectionsIndexes[(int)direction];
+            return _oppositeDirectionsIndexes[(int)direction];
         }
 
         private static ConnectionDirection GetNextConnectionDirection(ConnectionDirection previousConnectionDirection, List<RoomContainer> mazeRooms, RoomContainer room)
         {
             ConnectionDirection nextConnectionDirection;
-            var unavailableConnectionDirectionIndex = _oppositeDerectionsIndexes[(int)previousConnectionDirection];
+            var unavailableConnectionDirectionIndex = _oppositeDirectionsIndexes[(int)previousConnectionDirection];
             List<ConnectionDirection> newConnectionDirections =
                 _randomDirectionIndexesList.FindAll(x => x != (ConnectionDirection)unavailableConnectionDirectionIndex);
 
@@ -77,7 +77,7 @@ namespace example.Scripts.MazeGeneratorScripts
             {
                 nextConnectionDirection = newConnectionDirections[Random.Range(0, newConnectionDirections.Count)];
                 if (CheckNextPositionAvailable(mazeRooms,
-                        GetRoomPosition(nextConnectionDirection, mazeRooms[^1], room)))
+                        GetRoomPosition(nextConnectionDirection, mazeRooms[^1], room), room.RoomColliders[0].bounds))
                 {
                     return nextConnectionDirection;
                 }
@@ -119,12 +119,12 @@ namespace example.Scripts.MazeGeneratorScripts
             newRoom.RoomTransform.position = newRoomPosition;
         }
 
-        private static bool CheckNextPositionAvailable(List<RoomContainer> mazeRooms, Vector3 nextPosition)
+        private static bool CheckNextPositionAvailable(List<RoomContainer> mazeRooms, Vector3 nextPosition, Bounds roomArea)
         {
             foreach (var mazeRoom in mazeRooms)
             {
                 //Todo: fix this for any concave bounds intersect
-                if (mazeRoom.IsPointInRoomBound(nextPosition)) return false;
+                if (mazeRoom.IsNextPositionInRoomBound(nextPosition, roomArea)) return false;
             }
             return true;
         }

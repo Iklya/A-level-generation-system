@@ -33,12 +33,14 @@ namespace example.Scripts.RoomScripts
             }
         }
 
-        public bool IsPointInRoomBound(Vector3 point)
+        public bool IsNextPositionInRoomBound(Vector3 nextPosition, Bounds roomArea)
         {
+            Bounds nextPositionRoomBounds = new Bounds(nextPosition, roomArea.size);
+
             bool isOverlapping = false;
             foreach (var roomCollider in RoomColliders)
             {
-                isOverlapping |= roomCollider.OverlapPoint(point);
+                isOverlapping |= nextPositionRoomBounds.Intersects(roomCollider.bounds);
             }
             return isOverlapping;
         }
