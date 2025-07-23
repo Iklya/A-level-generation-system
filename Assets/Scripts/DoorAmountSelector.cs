@@ -11,7 +11,7 @@ public class DoorAmountSelector
     
     public int GetCoridorDoorsAmount()
     {
-        float currChance = Random.Range(0f, 100f);
+        float currChance = Random.Range(0f, 99.9f);
         float totalChance = 0f;
 
         foreach (var doorChance in coridorDoorChances)

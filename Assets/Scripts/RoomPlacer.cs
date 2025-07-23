@@ -18,10 +18,10 @@ public class RoomPlacer
     private RoomChance[] roomChances;
     public CoridorDoorChance[] coridorDoorChances;
 
-    private List<(int x, int y, GameObject room, int roomType)> mainPath = new List<(int x, int y, GameObject room, int roomType)>();
+    private List<RoomData> mainPath = new List<RoomData>();
 
-    // ключ - индекс коридора + направление доп. пути, значение - список комнат доп пути
-    private Dictionary<(int, int), List<(int x, int y, GameObject room, int roomType)>> extraPaths = new Dictionary<(int, int), List<(int x, int y, GameObject room, int roomType)>>();
+    // ключ - индекс коридора, значение - список из направления доп. пути + списка комнат доп пути
+    private Dictionary<int, List<(int Direction, List<RoomData> Path)>> extraPaths = new();
 
     public RoomPlacer(MatrixManager matrixManager, GameObject[] roomPrefabs, Vector2 roomSize,
                       Sprite[] doorSprites, int N, RoomChance[] roomChances, CoridorDoorChance[] coridorDoorChances,
@@ -50,7 +50,7 @@ public class RoomPlacer
     private void GenerateMatrixMainRooms()
     {
         matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, 1);
-        mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null, 1));
+        mainPath.Add(new RoomData(matrixManager.CurrentX, matrixManager.CurrentY, null, 1));
 
         for (int i = 1; i < N; i++)
         {
@@ -72,7 +72,7 @@ public class RoomPlacer
             matrixManager.MoveToNextCell(nextDirection);
             int curRoomType = isLastRoom ? 2 : 0;
             matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, curRoomType);
-            mainPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null, curRoomType));
+            mainPath.Add(new RoomData(matrixManager.CurrentX, matrixManager.CurrentY, null, curRoomType));
         }
     }
 
@@ -82,40 +82,32 @@ public class RoomPlacer
         {
             (GameObject room, int curType) = roomInstantiator.InstantiateMainRooms(mainPath, r);
 
-            mainPath[r] = (mainPath[r].x, mainPath[r].y, room, curType);
+            mainPath[r] = new RoomData(mainPath[r].X, mainPath[r].Y, room, curType);
 
-            mainPath[r].room.transform.SetParent(GameObject.Find("MainPathRooms").transform);
+            mainPath[r].Room.transform.SetParent(GameObject.Find("MainPathRooms").transform);
 
             if (r > 0)
             {
                 // Сразу ставим дверь между текущей и предыдущей комнатой
                 int direction = directionManager.GetDirection(
-                    (mainPath[r - 1].x, mainPath[r - 1].y),
-                    (mainPath[r].x, mainPath[r].y)
+                    (mainPath[r - 1].X, mainPath[r - 1].Y),
+                    (mainPath[r].X, mainPath[r].Y)
                 );
 
-                doorPlacer.PlaceDoor(mainPath[r - 1].room, direction);
-                doorPlacer.PlaceDoor(mainPath[r].room, directionManager.GetOppositeDirection(direction));
+                ConnectRooms(mainPath[r - 1].Room, mainPath[r].Room, direction);
             }
 
-            if (mainPath[r].roomType == 3)
+            if (mainPath[r].RoomType == 3)
             {
                 int curDoorAmount = doorAmountSelector.GetCoridorDoorsAmount();
                 if (curDoorAmount > 2)
                 {
-                    // проверяем сколько можно доп. путей построить от текущего коридора
-
-                    List<int> availableDirections = directionManager.SelectNextDirections(matrixManager);
-                    curDoorAmount = Mathf.Min(curDoorAmount - 2, availableDirections.Count);
                     Debug.Log($"{curDoorAmount} - доступно дверей для размещения в текущем коридоре");
 
-                    if (curDoorAmount > 0)
-                    {
-                        int S = N - (r + 1);
+                    int S = N - (r + 1);
 
-                        GenerateMatrixExtraRooms(extraPaths, r, S, curDoorAmount);
-                        GenerateGameExtraRooms(extraPaths, r);
-                    }
+                    GenerateMatrixExtraRooms(r, S, curDoorAmount);
+                    GenerateGameExtraRooms(r);
                 }
             }
         }
@@ -123,20 +115,30 @@ public class RoomPlacer
         Debug.Log($"Создалось: {GameObject.Find("MainPathRooms").transform.childCount} комнат основного пути");
     }
 
-    private void GenerateMatrixExtraRooms(Dictionary<(int, int), List<(int x, int y, GameObject room, int roomType)>> extraPaths, int coridorIdx, int S, int curDoorAmount)
+    private void GenerateMatrixExtraRooms(int corridorIdx, int S, int curDoorAmount)
     {
+        if (!extraPaths.ContainsKey(corridorIdx))
+            extraPaths[corridorIdx] = new List<(int, List<RoomData>)>();
+
         for (int i = 0; i < curDoorAmount; i++)
         {
-            matrixManager.CurrentX = mainPath[coridorIdx].x;
-            matrixManager.CurrentY = mainPath[coridorIdx].y;
+            matrixManager.CurrentX = mainPath[corridorIdx].X;
+            matrixManager.CurrentY = mainPath[corridorIdx].Y;
 
             int k = Random.Range(1, S + 1);
 
-            Debug.Log($"{coridorIdx} - индекс коридора осн пути с 3+ дверьми, длина доп. пути - {k}");
+            Debug.Log($"{corridorIdx} - индекс коридора осн пути с 3+ дверьми, длина доп. пути - {k}");
 
-            List<(int x, int y, GameObject room, int roomType)> curPath = new List<(int x, int y, GameObject room, int roomType)>();
+            List<RoomData> curPath = new List<RoomData>();
 
-            int curDirection = -1;
+            List<int> availableDirections = directionManager.SelectNextDirections(matrixManager);
+            if (availableDirections.Count == 0)
+            {
+                Debug.LogWarning($"No available directions for main room #{corridorIdx + 1}'s extra path");
+                continue;
+            }
+
+            int curDirection = availableDirections[Random.Range(0, availableDirections.Count)];
 
             for (int j = 0; j < k; j++) 
             {
@@ -147,70 +149,70 @@ public class RoomPlacer
                 {
                     matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, 6);
                     if (curPath.Count > 0)
-                        curPath[curPath.Count - 1] = (matrixManager.CurrentX, matrixManager.CurrentY, null, 6);
+                        curPath[curPath.Count - 1] = new RoomData(matrixManager.CurrentX, matrixManager.CurrentY, null, 6);
                     else
-                        curPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null, 6));
+                        curPath.Add(new RoomData(matrixManager.CurrentX, matrixManager.CurrentY, null, 6));
                     break;
                 }
 
                 int nextDirection = nextDirections[Random.Range(0, nextDirections.Count)];
-
-                if (j == 0)
-                    curDirection = nextDirection;
-
                 matrixManager.MoveToNextCell(nextDirection);
 
                 int curRoomType = isQuestRoom ? 6 : roomTypeSelector.GetRandomRoomType();
                 matrixManager.SetCell(matrixManager.CurrentX, matrixManager.CurrentY, curRoomType);
-                curPath.Add((matrixManager.CurrentX, matrixManager.CurrentY, null, curRoomType));
+
+                curPath.Add(new RoomData(matrixManager.CurrentX, matrixManager.CurrentY, null, curRoomType));
 
                 if (isQuestRoom)
                     break;
             }
 
-            extraPaths[(coridorIdx, curDirection)] = curPath;
+            extraPaths[corridorIdx].Add((curDirection, curPath));
         }
     }
 
-    private void GenerateGameExtraRooms(Dictionary<(int, int), List<(int x, int y, GameObject room, int roomType)>> extraPaths, int coridorIdx)
+    private void GenerateGameExtraRooms(int corridorIdx)
     {
-        foreach (var kv in extraPaths)
+        if (!extraPaths.ContainsKey(corridorIdx))
+            return;
+
+        GameObject previousRoom = mainPath[corridorIdx].Room;
+
+        foreach (var extra in extraPaths[corridorIdx])
         {
-            if (kv.Key.Item1 != coridorIdx)
-                continue;
+            int previousDirection = extra.Direction;
 
-            int prevDirection = kv.Key.Item2;
-            GameObject prevRoom = mainPath[coridorIdx].room;
-
-            List<(int x, int y, GameObject room, int roomType)> extraPath = kv.Value;
+            List<RoomData> extraPath = extra.Path;
 
             // задаём имя контейнеру (можно в отдельную функцию потом тоже, но есть ли смысл)
-            string parentName = $"ExtraPath_{prevDirection}";
+            string parentName = $"ExtraPath_{previousDirection}";
             GameObject containerObj = new GameObject(parentName);
-            containerObj.transform.SetParent(prevRoom.transform);
+            containerObj.transform.SetParent(previousRoom.transform);
 
             for (int r = 0; r < extraPath.Count; r++)
             {
                 roomInstantiator.InstantiateExtraRooms(extraPath, r);
-
-                extraPath[r].room.transform.SetParent(containerObj.transform);
+                extraPath[r].Room.transform.SetParent(containerObj.transform);
             }
 
-            doorPlacer.PlaceDoor(prevRoom, prevDirection);
-            doorPlacer.PlaceDoor(extraPath[0].room, directionManager.GetOppositeDirection(prevDirection));
+            ConnectRooms(previousRoom, extraPath[0].Room, previousDirection);
 
-            for (int i = 0; i < kv.Value.Count - 1; i++)
+            for (int i = 0; i < extraPath.Count - 1; i++)
             {
-                GameObject currRoom = extraPath[i].room;
-                GameObject nextRoom = extraPath[i + 1].room;
+                GameObject currRoom = extraPath[i].Room;
+                GameObject nextRoom = extraPath[i + 1].Room;
 
-                int direction = directionManager.GetDirection((extraPath[i].x, extraPath[i].y), (extraPath[i + 1].x, extraPath[i + 1].y));
+                int direction = directionManager.GetDirection((extraPath[i].X, extraPath[i].Y),
+                                                              (extraPath[i + 1].X, extraPath[i + 1].Y));
 
-                doorPlacer.PlaceDoor(currRoom, direction);
-                doorPlacer.PlaceDoor(nextRoom, directionManager.GetOppositeDirection(direction));
+                ConnectRooms(currRoom, nextRoom, direction);
             }
         }
     }
 
-
+    private void ConnectRooms(GameObject roomA, GameObject roomB, int direction)
+    {
+        doorPlacer.PlaceDoor(roomA, direction);
+        doorPlacer.PlaceDoor(roomB, directionManager.GetOppositeDirection(direction));
+    }
 }
