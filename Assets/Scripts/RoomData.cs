@@ -21,8 +21,6 @@ public class RoomData
     public void UpdateItemPlaces()
     {
         ItemPlaces.Clear();
-        if (Room == null) return;
-
         Transform itemPlacesParent = Room.transform.Find("RoomItemPlaces");
         foreach (Transform child in itemPlacesParent)
             ItemPlaces.Add(child);
