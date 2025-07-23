@@ -14,8 +14,9 @@ public class LevelGenerator : MonoBehaviour
     private MatrixManager matrixManager;
     private RoomPlacer roomPlacer;
     private RoomSizeCalculator roomSizeCalculator;
-    RoomTypeSelector roomTypeSelector;
-    DoorAmountSelector doorAmountSelector;
+    private RoomTypeSelector roomTypeSelector;
+    private DoorAmountSelector doorAmountSelector;
+    public RoomItemSpawner roomItemSpawner;
 
     public RoomChance[] roomChances;
     public CoridorDoorChance[] coridorDoorChances;
@@ -47,7 +48,10 @@ public class LevelGenerator : MonoBehaviour
                                     coridorDoorChances, roomTypeSelector, roomInstantiator, doorAmountSelector);
 
         roomPlacer.GenerateRooms();
+
+        roomItemSpawner.SpawnItemsInAllRooms(roomPlacer);
     }
+
     public void RegenerateLevel()
     {
         GenerateLevel();

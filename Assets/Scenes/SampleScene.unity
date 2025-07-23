@@ -406,6 +406,109 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &438540972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 438540973}
+  - component: {fileID: 438540974}
+  m_Layer: 0
+  m_Name: RoomItemSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &438540973
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438540972}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.8025174, y: 1.7994739, z: -9.974483}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &438540974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438540972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 851521ae3264bb04db0a6ea2eb406ca6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemTypeDatas:
+  - Type: 0
+    Prefabs:
+    - {fileID: 5425062648184858248, guid: 5c348fe45cfb39c4383e2e65a3825b57, type: 3}
+    - {fileID: 6977188043901058379, guid: 09bcabd20debe2746b3e4227e304a4f3, type: 3}
+    - {fileID: 8391970090550772140, guid: f5486baadc17bc144bb1fb8601377687, type: 3}
+    - {fileID: 7503393038733338764, guid: ebfdbbd31fa14034fb578ee4477c1f13, type: 3}
+    - {fileID: 8384611563630792427, guid: 60b92dd58cca2b24daad9bb7aad1a5e4, type: 3}
+    - {fileID: 6674586624306426284, guid: 11a47af9a2040504ca69b14d54ca5b28, type: 3}
+    - {fileID: 4394273765495921195, guid: ac928dadc7e1fdb4f92388bf1a7baebf, type: 3}
+    - {fileID: 5161033457020179663, guid: c97cf6522c999244b8a91fa3c0053f68, type: 3}
+    - {fileID: 7761713844826215146, guid: 251284ecac93f7544838cf4c38510f63, type: 3}
+    - {fileID: 6464938703934587040, guid: d26358d3e43d6ca4096fc44d4b633a45, type: 3}
+  - Type: 1
+    Prefabs:
+    - {fileID: 7947717823132501810, guid: 4b5d4670ed81fcc498719589b8babb1c, type: 3}
+  - Type: 2
+    Prefabs:
+    - {fileID: 8541803776916883565, guid: a8f9de6a0bb516f46b059d814070b840, type: 3}
+  - Type: 3
+    Prefabs:
+    - {fileID: 8585838440656120587, guid: 4dd98829beab13244b20f2a7c41a13f5, type: 3}
+  - Type: 4
+    Prefabs:
+    - {fileID: 9149085646440354385, guid: 8f063fbb234ad3941be3b81fb9af0b4f, type: 3}
+  - Type: 5
+    Prefabs:
+    - {fileID: 1495689989266313552, guid: 5a1e9156718a1be41b1d46aea0f2f04f, type: 3}
+  roomItemChances:
+  - AllowedRoomType: 4
+    ItemType: 4
+    SpawnChance: 100
+  - AllowedRoomType: 4
+    ItemType: 0
+    SpawnChance: 55
+  - AllowedRoomType: 5
+    ItemType: 2
+    SpawnChance: 10
+  - AllowedRoomType: 5
+    ItemType: 0
+    SpawnChance: 33
+  - AllowedRoomType: 5
+    ItemType: 1
+    SpawnChance: 100
+  - AllowedRoomType: 6
+    ItemType: 2
+    SpawnChance: 100
+  - AllowedRoomType: 3
+    ItemType: 1
+    SpawnChance: 25
+  - AllowedRoomType: 3
+    ItemType: 0
+    SpawnChance: 25
+  - AllowedRoomType: 1
+    ItemType: 3
+    SpawnChance: 100
+  - AllowedRoomType: 2
+    ItemType: 5
+    SpawnChance: 100
 --- !u!1 &722607218
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +552,7 @@ MonoBehaviour:
   - {fileID: 1008427950, guid: 7799c15460812da4787af3c18f12348a, type: 3}
   - {fileID: 1299401727, guid: 7799c15460812da4787af3c18f12348a, type: 3}
   - {fileID: 1081071420, guid: 7799c15460812da4787af3c18f12348a, type: 3}
+  roomItemSpawner: {fileID: 438540974}
   roomChances:
   - roomType: 3
     chance: 34
@@ -823,6 +927,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 330585546}
   - {fileID: 722607220}
+  - {fileID: 438540973}
   - {fileID: 119336353}
   - {fileID: 428629311}
   - {fileID: 1691054386}

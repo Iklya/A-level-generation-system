@@ -18,10 +18,10 @@ public class RoomPlacer
     private RoomChance[] roomChances;
     public CoridorDoorChance[] coridorDoorChances;
 
-    private List<RoomData> mainPath = new List<RoomData>();
+    public List<RoomData> mainPath = new List<RoomData>();
 
     // ключ - индекс коридора, значение - список из направлени€ доп. пути + списка комнат доп пути
-    private Dictionary<int, List<(Direction Direction, List<RoomData> Path)>> extraPaths = new();
+    public Dictionary<int, List<(Direction Direction, List<RoomData> Path)>> extraPaths = new();
 
     public RoomPlacer(MatrixManager matrixManager, GameObject[] roomPrefabs, Vector2 roomSize,
                       Sprite[] doorSprites, int N, RoomChance[] roomChances, CoridorDoorChance[] coridorDoorChances,
@@ -86,7 +86,6 @@ public class RoomPlacer
 
             if (r > 0)
             {
-                // —разу ставим дверь между текущей и предыдущей комнатой
                 Direction direction = directionManager.GetDirection(
                     (mainPath[r - 1].X, mainPath[r - 1].Y),
                     (mainPath[r].X, mainPath[r].Y)
