@@ -5,6 +5,7 @@ public class LevelGenerator : MonoBehaviour
 {
     [Range(2, 50)]
     public int N;
+    public GameObject MainPathRooms;
     public GameObject[] roomPrefabs;
     public Sprite[] doorSprites; // Пусть: 0 - left, 1 - right, 2 - up, 3 - down
 
@@ -16,12 +17,21 @@ public class LevelGenerator : MonoBehaviour
     RoomTypeSelector roomTypeSelector;
     DoorAmountSelector doorAmountSelector;
 
-
     public RoomChance[] roomChances;
     public CoridorDoorChance[] coridorDoorChances;
 
     void Start()
     {
+        GenerateLevel();
+    }
+
+    public void GenerateLevel()
+    {
+        for (int i = MainPathRooms.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(MainPathRooms.transform.GetChild(i).gameObject);
+        }
+
         roomSizeCalculator = new RoomSizeCalculator(roomPrefabs[1]);
         roomSize = roomSizeCalculator.RoomSizeCalculation(roomPrefabs[1]);
 
@@ -31,10 +41,16 @@ public class LevelGenerator : MonoBehaviour
         RoomInstantiator roomInstantiator = new RoomInstantiator(matrixManager, roomPrefabs, roomSize, roomTypeSelector);
         DoorAmountSelector doorAmountSelector = new DoorAmountSelector(coridorDoorChances);
 
+        roomPlacer?.Clear();
+
         roomPlacer = new RoomPlacer(matrixManager, roomPrefabs, roomSize, doorSprites, N, roomChances,
                                     coridorDoorChances, roomTypeSelector, roomInstantiator, doorAmountSelector);
 
         roomPlacer.GenerateRooms();
+    }
+    public void RegenerateLevel()
+    {
+        GenerateLevel();
     }
 
     private void OnValidate()

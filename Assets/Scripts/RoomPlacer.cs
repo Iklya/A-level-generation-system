@@ -215,4 +215,9 @@ public class RoomPlacer
         doorPlacer.PlaceDoor(roomA, direction);
         doorPlacer.PlaceDoor(roomB, directionManager.GetOppositeDirection(direction));
     }
+    public void Clear()
+    {
+        mainPath.Clear();
+        extraPaths.Clear();
+    }
 }
