@@ -16,36 +16,34 @@ public class RoomInstantiator
         this.roomTypeSelector = roomTypeSelector;
     }
 
-    public (GameObject, int) InstantiateMainRooms(List<RoomData> mainPath, int r)
+    public (GameObject, RoomType) InstantiateMainRooms(List<RoomData> mainPath, int r)
     {
-        GameObject roomObj = null;
-        int curType = matrixManager.GetCell(mainPath[r].X, mainPath[r].Y);
-        Debug.Log($"{curType} - изначально для {r + 1} комнаты был такой индекс матрицы");
+        int curTypeInt = matrixManager.GetCell(mainPath[r].X, mainPath[r].Y);
+        RoomType curType = (RoomType)curTypeInt;
 
-        Vector2 gamePosition = matrixManager.MatrixToGame(mainPath[r].X, mainPath[r].Y, roomSize);
+        Vector2 pos = matrixManager.MatrixToGame(mainPath[r].X, mainPath[r].Y, roomSize);
 
-        if (curType <= 0)
+        if (curTypeInt <= 0)
         {
-            curType = roomTypeSelector.GetRandomRoomType();
-            matrixManager.SetCell(mainPath[r].X, mainPath[r].Y, curType);
+            curType = (RoomType)roomTypeSelector.GetRandomRoomType();
+            matrixManager.SetCell(mainPath[r].X, mainPath[r].Y, (int)curType);
         }
 
-        roomObj = Object.Instantiate(roomPrefabs[curType - 1], gamePosition, Quaternion.identity);
-
-        Debug.Log($"{curType} - выбранный тип комнаты для {r+1} комнаты основного пути");
+        GameObject roomObj = Object.Instantiate(roomPrefabs[(int)curType - 1], pos, Quaternion.identity);
         mainPath[r] = new RoomData(mainPath[r].X, mainPath[r].Y, roomObj, curType);
 
         return (roomObj, curType);
     }
 
+
     public void InstantiateExtraRooms(List<RoomData> extraPath, int r)
     {
         GameObject roomObj = null;
-        int curType = matrixManager.GetCell(extraPath[r].X, extraPath[r].Y);
+        RoomType curType = (RoomType)matrixManager.GetCell(extraPath[r].X, extraPath[r].Y);
 
         Vector2 gamePosition = matrixManager.MatrixToGame(extraPath[r].X, extraPath[r].Y, roomSize);
 
-        roomObj = Object.Instantiate(roomPrefabs[curType - 1], gamePosition, Quaternion.identity);
+        roomObj = Object.Instantiate(roomPrefabs[(int)curType - 1], gamePosition, Quaternion.identity);
 
         extraPath[r] = new RoomData(extraPath[r].X, extraPath[r].Y, roomObj, curType);
     }

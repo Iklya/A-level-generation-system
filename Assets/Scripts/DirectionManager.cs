@@ -3,36 +3,39 @@ using UnityEngine;
 
 public class DirectionManager
 {
-    public int GetDirection((int x, int y) fromRoom, (int x, int y) toRoom)
+    public Direction GetDirection((int x, int y) fromRoom, (int x, int y) toRoom)
     {
         if (toRoom.x < fromRoom.x)
-            return 0;
+            return Direction.Left;
         if (toRoom.x > fromRoom.x)
-            return 1;
+            return Direction.Right;
         if (toRoom.y > fromRoom.y)
-            return 2;
-        return 3;
+            return Direction.Up;
+        return Direction.Down;
     }
 
-    public int GetOppositeDirection(int dir)
+    public Direction GetOppositeDirection(Direction dir)
     {
-        if (dir == 0)
-            return 1;
-        if (dir == 1)
-            return 0;
-        if (dir == 2)
-            return 3;
-        return 2;
+        switch (dir)
+        {
+            case Direction.Left: 
+                return Direction.Right;
+            case Direction.Right:
+                return Direction.Left;
+            case Direction.Up:
+                return Direction.Down;
+            default: return Direction.Up;
+        }
     }
 
-    public List<int> SelectNextDirections(MatrixManager matrixManager)
+    public List<Direction> SelectNextDirections(MatrixManager matrixManager)
     {
-        List<int> avaliableDoors = new List<int>();
+        var avaliableDoors = new List<Direction>();
 
-        if (matrixManager.GetCell(matrixManager.CurrentX - 1, matrixManager.CurrentY) == -1) avaliableDoors.Add(0);
-        if (matrixManager.GetCell(matrixManager.CurrentX + 1, matrixManager.CurrentY) == -1) avaliableDoors.Add(1);
-        if (matrixManager.GetCell(matrixManager.CurrentX, matrixManager.CurrentY + 1) == -1) avaliableDoors.Add(2);
-        if (matrixManager.GetCell(matrixManager.CurrentX, matrixManager.CurrentY - 1) == -1) avaliableDoors.Add(3);
+        if (matrixManager.GetCell(matrixManager.CurrentX - 1, matrixManager.CurrentY) == (int)RoomType.Empty) avaliableDoors.Add(Direction.Left);
+        if (matrixManager.GetCell(matrixManager.CurrentX + 1, matrixManager.CurrentY) == (int)RoomType.Empty) avaliableDoors.Add(Direction.Right);
+        if (matrixManager.GetCell(matrixManager.CurrentX, matrixManager.CurrentY + 1) == (int)RoomType.Empty) avaliableDoors.Add(Direction.Up);
+        if (matrixManager.GetCell(matrixManager.CurrentX, matrixManager.CurrentY - 1) == (int)RoomType.Empty) avaliableDoors.Add(Direction.Down);
 
         return avaliableDoors;
     }

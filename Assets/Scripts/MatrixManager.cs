@@ -19,7 +19,7 @@ public class MatrixManager
 
         for (int x = 0; x < MatrixSize; x++)
             for (int y = 0; y < MatrixSize; y++)
-                Matrix[x, y] = -1;
+                Matrix[x, y] = (int)RoomType.Empty;
 
         CenterX = MatrixSize / 2;
         CenterY = MatrixSize / 2;
@@ -65,20 +65,20 @@ public class MatrixManager
         return new Vector2(gameX, gameY);
     }
 
-    public void MoveToNextCell(int dir)
+    public void MoveToNextCell(Direction dir)
     {
         switch (dir)
         {
-            case 0:
+            case Direction.Left:
                 CurrentX -= 1;
                 break;
-            case 1:
+            case Direction.Right:
                 CurrentX += 1;
                 break;
-            case 2:
+            case Direction.Up:
                 CurrentY += 1;
                 break;
-            case 3:
+            case Direction.Down:
                 CurrentY -= 1;
                 break;
         }
@@ -88,7 +88,7 @@ public class MatrixManager
     {
         for (int x = 0; x < MatrixSize; x++)
             for (int y = 0; y < MatrixSize; y++)
-                Matrix[x, y] = -1;
+                Matrix[x, y] = (int)RoomType.Empty;
 
         CenterX = MatrixSize / 2;
         CenterY = MatrixSize / 2;

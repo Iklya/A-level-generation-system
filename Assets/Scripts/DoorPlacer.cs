@@ -9,27 +9,27 @@ public class DoorPlacer
         this.doorSprites = doorSprites;
     }
 
-    public void PlaceDoor(GameObject room, int dir)
+    public void PlaceDoor(GameObject room, Direction dir)
     {
         Transform doorPlacement = null;
 
         switch (dir)
         {
-            case 0:
+            case Direction.Left:
                 doorPlacement = room.transform.Find("WallsLeft/doorPlacement");
                 break;
-            case 1:
+            case Direction.Right:
                 doorPlacement = room.transform.Find("WallsRight/doorPlacement");
                 break;
-            case 2:
+            case Direction.Up:
                 doorPlacement = room.transform.Find("WallsUp/doorPlacement");
                 break;
-            case 3:
+            case Direction.Down:
                 doorPlacement = room.transform.Find("WallsDown/doorPlacement");
                 break;
         }
 
         SpriteRenderer spriteRenderer = doorPlacement.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = doorSprites[dir];
+        spriteRenderer.sprite = doorSprites[(int)dir];
     }
 }
