@@ -84,6 +84,8 @@ public class RoomPlacer
 
             mainPath[r].Room.transform.SetParent(GameObject.Find("MainPathRooms").transform);
 
+            mainPath[r].UpdateItemPlaces();
+
             if (r > 0)
             {
                 Direction direction = directionManager.GetDirection(
@@ -189,6 +191,7 @@ public class RoomPlacer
             for (int r = 0; r < extraPath.Count; r++)
             {
                 roomInstantiator.InstantiateExtraRooms(extraPath, r);
+                extraPath[r].UpdateItemPlaces();
                 extraPath[r].Room.transform.SetParent(containerObj.transform);
             }
 

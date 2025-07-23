@@ -24,10 +24,7 @@ public class RoomData
         if (Room == null) return;
 
         Transform itemPlacesParent = Room.transform.Find("RoomItemPlaces");
-        if (itemPlacesParent != null)
-        {
-            foreach (Transform child in itemPlacesParent)
-                ItemPlaces.Add(child);
-        }
+        foreach (Transform child in itemPlacesParent)
+            ItemPlaces.Add(child);
     }
 }

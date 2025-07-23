@@ -31,7 +31,6 @@ public class RoomInstantiator
 
         GameObject roomObj = Object.Instantiate(roomPrefabs[(int)curType - 1], pos, Quaternion.identity);
         mainPath[r] = new RoomData(mainPath[r].X, mainPath[r].Y, roomObj, curType);
-        mainPath[r].UpdateItemPlaces();
 
         return (roomObj, curType);
     }
@@ -47,6 +46,5 @@ public class RoomInstantiator
         roomObj = Object.Instantiate(roomPrefabs[(int)curType - 1], gamePosition, Quaternion.identity);
 
         extraPath[r] = new RoomData(extraPath[r].X, extraPath[r].Y, roomObj, curType);
-        extraPath[r].UpdateItemPlaces();
     }
 }

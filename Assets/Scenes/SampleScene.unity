@@ -506,6 +506,9 @@ MonoBehaviour:
   - AllowedRoomType: 1
     ItemType: 3
     SpawnChance: 100
+  - AllowedRoomType: 1
+    ItemType: 0
+    SpawnChance: 100
   - AllowedRoomType: 2
     ItemType: 5
     SpawnChance: 100
@@ -538,7 +541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897a49cbed342dc438583789c28e6959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  N: 12
+  N: 50
   MainPathRooms: {fileID: 119336352}
   roomPrefabs:
   - {fileID: 8611842621046820805, guid: 9b0204148055db1408f3243df617c5ee, type: 3}

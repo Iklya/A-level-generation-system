@@ -8,8 +8,6 @@ public class RoomItemSpawner : MonoBehaviour
 
     public void SpawnItemsInAllRooms(RoomPlacer roomPlacer)
     {
-        if (roomPlacer == null) return;
-
         foreach (var room in roomPlacer.mainPath)
             SpawnItemsInRoom(room);
 
@@ -32,9 +30,6 @@ public class RoomItemSpawner : MonoBehaviour
 
         foreach (Transform place in roomData.ItemPlaces)
         {
-            if (place.childCount > 0)
-                continue;
-
             foreach (var chance in roomItemChances)
             {
                 if (chance.AllowedRoomType != roomData.RoomType)
